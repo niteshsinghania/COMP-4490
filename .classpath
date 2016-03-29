@@ -26,5 +26,6 @@
 	<classpathentry kind="lib" path="libs/lwjgl-2.9.3/jar/lzma.jar"/>
 	<classpathentry kind="lib" path="libs/lwjgl-2.9.3/jar/substance-7.2.1.jar"/>
 	<classpathentry kind="lib" path="libs/lwjgl-2.9.3/jar/trident-7.2.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Nitesh/Documents/Comp-4490/libs/lwjgl-2.9.3/jar/PNGDecoder.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
