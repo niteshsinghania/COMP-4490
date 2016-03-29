@@ -30,7 +30,9 @@ public class MainGameLoop {
 		
 		RawModel model = OBJLoader.loadObjModel("tree", loader);
 		
-		TexturedModel staticModel = new TexturedModel(model,new ModelTexture(loader.loadTexture("tree")));
+		TexturedModel staticModel = new TexturedModel(model,new ModelTexture(loader.loadTexture("treeTexture")));
+		
+		TexturedModel lamp = new TexturedModel(OBJLoader.loadObjModel("lamp", loader),new ModelTexture(loader.loadTexture("lampTexture")));
 		
 		TexturedModel grass = new TexturedModel(OBJLoader.loadObjModel("grassModel", loader),new ModelTexture(loader.loadTexture("grassTexture")));
 		grass.getTexture().setHasTransparency(true);
@@ -48,9 +50,14 @@ public class MainGameLoop {
 		}
 		
 		List<Light> lights = new ArrayList<Light>();
-		lights.add(new Light(new Vector3f(0,10000,-7000),new Vector3f(1,1,1)));
-		lights.add( new Light(new Vector3f(-200,10,-200),new Vector3f(5,0,0)));
-		lights.add( new Light(new Vector3f(200,10,200),new Vector3f(0,0,5)));
+		lights.add(new Light(new Vector3f(0,1000,-7000),new Vector3f(0.4f,0.4f,0.4f)));
+		lights.add( new Light(new Vector3f(185, 10, -293), new Vector3f(2,0,0), new Vector3f(1, 0.01f, 0.002f)));
+		lights.add( new Light(new Vector3f(0, 10, -100), new Vector3f(0,2,2), new Vector3f(1, 0.01f, 0.002f)));
+		lights.add( new Light(new Vector3f(-185, 10, -305), new Vector3f(2,2,0), new Vector3f(1, 0.01f, 0.002f)));
+
+		entities.add(new Entity(lamp, new Vector3f(185, -4.2f, -293), 0, 0, 0, 1));
+		entities.add(new Entity(lamp, new Vector3f(0, -4.2f, -100), 0, 0, 0, 1));
+		entities.add(new Entity(lamp, new Vector3f(-185, -4.2f, -305), 0, 0, 0, 1));
 
 		
 		Terrain terrain = new Terrain(0,0,loader,new ModelTexture(loader.loadTexture("grass")));
