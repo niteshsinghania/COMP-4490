@@ -47,7 +47,11 @@ public class MainGameLoop {
 			entities.add(new Entity(fern, new Vector3f(random.nextFloat()*800 - 400,0,random.nextFloat() * -600),0,0,0,0.6f));
 		}
 		
-		Light light = new Light(new Vector3f(20000,20000,2000),new Vector3f(1,1,1));
+		List<Light> lights = new ArrayList<Light>();
+		lights.add(new Light(new Vector3f(0,10000,-7000),new Vector3f(1,1,1)));
+		lights.add( new Light(new Vector3f(-200,10,-200),new Vector3f(5,0,0)));
+		lights.add( new Light(new Vector3f(200,10,200),new Vector3f(0,0,5)));
+
 		
 		Terrain terrain = new Terrain(0,0,loader,new ModelTexture(loader.loadTexture("grass")));
 		Terrain terrain2 = new Terrain(1,0,loader,new ModelTexture(loader.loadTexture("grass")));
@@ -63,7 +67,7 @@ public class MainGameLoop {
 			for(Entity entity:entities){
 				renderer.processEntity(entity);
 			}
-			renderer.render(light, camera);
+			renderer.render(lights, camera);
 			DisplayManager.updateDisplay();
 		}
 
