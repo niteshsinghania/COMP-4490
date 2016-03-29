@@ -1,8 +1,6 @@
 package renderEngine;
 
 import java.io.FileInputStream;
-import java.io.FileReader;
-import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -14,7 +12,6 @@ import models.RawModel;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
-import org.lwjgl.opengl.GL14;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
@@ -39,6 +36,13 @@ public class Loader {
 		storeDataInAttributeList(2,3,normals);
 		unbindVAO();
 		return new RawModel(vaoID,indices.length);
+	}
+	public RawModel loadToVAO(float[] positions, int dimensions){
+		int vaoID = createVAO();
+		this.storeDataInAttributeList(0, dimensions, positions);
+		unbindVAO();
+		return new RawModel(vaoID, positions.length/dimensions);
+			
 	}
 	
 	public int loadTexture(String fileName) {
