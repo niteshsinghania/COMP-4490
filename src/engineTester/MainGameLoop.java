@@ -37,30 +37,60 @@ public class MainGameLoop {
 		
 		List<Entity> entities = new ArrayList<Entity>();
 		Random random = new Random();
+		//Generate terrain
+		Terrain terrain = new Terrain(0,0,loader,new ModelTexture(loader.loadTexture("grass")),"heightMap");
+		Terrain terrain2 = new Terrain(1,0,loader,new ModelTexture(loader.loadTexture("grass")),"heightMap");
 		
 		// Adding objects to scene
+
+		
 		for(int i=0;i<500;i++){
-			entities.add(new Entity(tree, new Vector3f(random.nextFloat()*800 - 400,0,random.nextFloat() * -600),0,0,0,1));
-			entities.add(new Entity(grass, new Vector3f(random.nextFloat()*800 - 400,0,random.nextFloat() * -600),0,0,0,1));
-			entities.add(new Entity(fern, new Vector3f(random.nextFloat()*800 - 400,0,random.nextFloat() * -600),0,0,0,0.6f));
+			float x = random.nextFloat()*800 - 400;
+			float z = random.nextFloat() * -600;
+			float y;
+			if(x< 0){
+				y = terrain.getHeightOfTerrain(Math.abs(x), Math.abs(z),1);
+			}
+			else{
+				y = terrain2.getHeightOfTerrain(x, Math.abs(z),-1);	
+			}
+			System.out.println(y);
+			entities.add(new Entity(tree, new Vector3f(x,y,z),0,random.nextFloat()*360,0,1));
+			x = random.nextFloat()*800 - 400;
+			z = random.nextFloat() * -600;
+			if(x< 0){
+				y= terrain.getHeightOfTerrain(Math.abs(x), Math.abs(z),1);
+			}
+			else{
+				y = terrain2.getHeightOfTerrain(x, Math.abs(z),-1);		
+			}
+			entities.add(new Entity(grass, new Vector3f(x,y,z),0,random.nextFloat()*360,0,1));
+			x = random.nextFloat()*800 - 400;
+			z = random.nextFloat() * -600;
+			if(x< 0){
+				y= terrain.getHeightOfTerrain(Math.abs(x), Math.abs(z),1);
+			}
+			else{
+				y = terrain2.getHeightOfTerrain(x, Math.abs(z),-1);		
+			}
+			entities.add(new Entity(fern, new Vector3f(x,y,z),0,random.nextFloat()*360,0,0.6f));
 		}
 		
 		List<Light> lights = new ArrayList<Light>();
 		//Sun
 		lights.add(new Light(new Vector3f(100,4000,-7000),new Vector3f(0.1f,0.1f,0.1f)));
 		//Point Lights
-		lights.add( new Light(new Vector3f(20, 14, -100), new Vector3f(2,0,0), new Vector3f(1, 0.01f, 0.002f)));
+		lights.add( new Light(new Vector3f(40, 14, -100), new Vector3f(2,0,0), new Vector3f(1, 0.01f, 0.002f)));
 		lights.add( new Light(new Vector3f(0, 14, -100), new Vector3f(0,2,2), new Vector3f(1, 0.01f, 0.002f)));
-		lights.add( new Light(new Vector3f(-20, 14, -100), new Vector3f(2,2,0), new Vector3f(1, 0.01f, 0.002f)));
+		lights.add( new Light(new Vector3f(-40, 14, -100), new Vector3f(2,2,0), new Vector3f(1, 0.01f, 0.002f)));
 
-		entities.add(new Entity(lamp, new Vector3f(20, 0f, -100), 0, 0, 0, 1.1f));
+		entities.add(new Entity(lamp, new Vector3f(40, 0f, -100), 0, 0, 0, 1.1f));
 		entities.add(new Entity(lamp, new Vector3f(0, 0f, -100), 0, 0, 0, 1.1f));
-		entities.add(new Entity(lamp, new Vector3f(-20, 0f, -100), 0, 0, 0,1.1f));
+		entities.add(new Entity(lamp, new Vector3f(-40, 0f, -100), 0, 0, 0,1.1f));
 		
 
 		
-		Terrain terrain = new Terrain(0,0,loader,new ModelTexture(loader.loadTexture("grass")));
-		Terrain terrain2 = new Terrain(1,0,loader,new ModelTexture(loader.loadTexture("grass")));
+		
 		
 		Camera camera = new Camera();	
 		MasterRenderer renderer = new MasterRenderer(loader);
@@ -84,5 +114,6 @@ public class MainGameLoop {
 		DisplayManager.closeDisplay();
 
 	}
+	
 
 }

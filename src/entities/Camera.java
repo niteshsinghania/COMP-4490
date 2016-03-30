@@ -1,9 +1,6 @@
 package entities;
 
-import java.awt.AWTException;
-import java.awt.Robot;
 import java.nio.IntBuffer;
-
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.BufferUtils;
@@ -18,7 +15,6 @@ public class Camera {
 	private float pitch = 10;
 	private float yaw = 0;
 	private float roll;
-	Robot mouseMover;
 	Display canvas;
 	boolean cameraMouse;
 	double xpos, ypos;
@@ -27,11 +23,6 @@ public class Camera {
 	
 	public Camera(){
 		cameraMouse = false;
-		try {
-			mouseMover = new Robot();
-		} catch (AWTException e) {
-			e.printStackTrace();
-		}
 		int min = org.lwjgl.input.Cursor.getMinCursorSize();
 		IntBuffer tmp = BufferUtils.createIntBuffer(min * min);
 		
