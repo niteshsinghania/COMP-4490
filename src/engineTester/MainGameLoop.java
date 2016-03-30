@@ -19,7 +19,6 @@ import entities.Light;
 public class MainGameLoop {
 
 	public static void main(String[] args) {
-
 		DisplayManager.createDisplay();
 		Loader loader = new Loader();
 		
@@ -47,14 +46,17 @@ public class MainGameLoop {
 		}
 		
 		List<Light> lights = new ArrayList<Light>();
-		lights.add(new Light(new Vector3f(0,1000,-7000),new Vector3f(0.4f,0.4f,0.4f)));
-		lights.add( new Light(new Vector3f(185, 10, -293), new Vector3f(2,0,0), new Vector3f(1, 0.01f, 0.002f)));
-		lights.add( new Light(new Vector3f(0, 10, -100), new Vector3f(0,2,2), new Vector3f(1, 0.01f, 0.002f)));
-		lights.add( new Light(new Vector3f(-185, 10, -305), new Vector3f(2,2,0), new Vector3f(1, 0.01f, 0.002f)));
+		//Sun
+		lights.add(new Light(new Vector3f(100,4000,-7000),new Vector3f(0.1f,0.1f,0.1f)));
+		//Point Lights
+		lights.add( new Light(new Vector3f(20, 14, -100), new Vector3f(2,0,0), new Vector3f(1, 0.01f, 0.002f)));
+		lights.add( new Light(new Vector3f(0, 14, -100), new Vector3f(0,2,2), new Vector3f(1, 0.01f, 0.002f)));
+		lights.add( new Light(new Vector3f(-20, 14, -100), new Vector3f(2,2,0), new Vector3f(1, 0.01f, 0.002f)));
 
-		entities.add(new Entity(lamp, new Vector3f(185, -4.2f, -293), 0, 0, 0, 1));
-		entities.add(new Entity(lamp, new Vector3f(0, -4.2f, -100), 0, 0, 0, 1));
-		entities.add(new Entity(lamp, new Vector3f(-185, -4.2f, -305), 0, 0, 0, 1));
+		entities.add(new Entity(lamp, new Vector3f(20, 0f, -100), 0, 0, 0, 1.1f));
+		entities.add(new Entity(lamp, new Vector3f(0, 0f, -100), 0, 0, 0, 1.1f));
+		entities.add(new Entity(lamp, new Vector3f(-20, 0f, -100), 0, 0, 0,1.1f));
+		
 
 		
 		Terrain terrain = new Terrain(0,0,loader,new ModelTexture(loader.loadTexture("grass")));
@@ -62,10 +64,11 @@ public class MainGameLoop {
 		
 		Camera camera = new Camera();	
 		MasterRenderer renderer = new MasterRenderer(loader);
-		
+		float sunBrightness = 1.5f;
 		while(!Display.isCloseRequested()){
 			camera.move();
-			
+			sunBrightness = renderer.getSunBrightness();
+			lights.get(0).setColour(new Vector3f(sunBrightness,sunBrightness,sunBrightness));
 			renderer.processTerrain(terrain);
 			renderer.processTerrain(terrain2);
 			for(Entity entity:entities){
@@ -73,6 +76,7 @@ public class MainGameLoop {
 			}
 			renderer.render(lights, camera);
 			DisplayManager.updateDisplay();
+			
 		}
 
 		renderer.cleanUp();
