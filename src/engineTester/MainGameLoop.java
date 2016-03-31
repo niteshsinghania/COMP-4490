@@ -3,12 +3,14 @@ package engineTester;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
 import models.TexturedModel;
 import particles.Particle;
 import particles.ParticleMaster;
 import particles.ParticleSystem;
 
 import org.lwjgl.input.Keyboard;
+
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
@@ -32,10 +34,14 @@ import entities.Light;
 public class MainGameLoop {
 
 	public static void main(String[] args) {
+		
 		DisplayManager.createDisplay();
 		Loader loader = new Loader();
 		
-		MasterRenderer renderer = new MasterRenderer(loader);
+		Camera camera = new Camera();
+		
+		MasterRenderer renderer = new MasterRenderer(loader, camera);
+		
 		ParticleMaster.init(loader, renderer.getProjectionMatrix());
 		
 		TexturedModel tree = new TexturedModel(OBJLoader.loadObjModel("pine", loader),new ModelTexture(loader.loadTexture("pine")));
@@ -73,7 +79,6 @@ public class MainGameLoop {
 			else{
 				y = terrain2.getHeightOfTerrain(x, Math.abs(z),-1);	
 			}
-			System.out.println(y);
 			entities.add(new Entity(tree, new Vector3f(x,y,z),0,random.nextFloat()*360,0,1));
 			x = random.nextFloat()*800 - 400;
 			z = random.nextFloat() * -600;
@@ -97,7 +102,10 @@ public class MainGameLoop {
 		
 		List<Light> lights = new ArrayList<Light>();
 		//Sun
-		lights.add(new Light(new Vector3f(10000,15000,-10000),new Vector3f(0.1f,0.1f,0.1f)));
+
+		Light sun = new Light(new Vector3f(10000,15000,-10000),new Vector3f(0.1f,0.1f,0.1f)); 
+		lights.add(sun);
+		
 		//Point Lights
 		float x = -60;
 		float z = -30;
@@ -132,8 +140,8 @@ public class MainGameLoop {
 		entities.add(new Entity(lamp, new Vector3f(x, y, z), 0, 0, 0,1.1f));
 			
 		
-		Camera camera = new Camera();
-		
+
+
 		float sunBrightness = 1.5f;
 		WaterFrameBuffers fbos = new WaterFrameBuffers();
 		//Water
@@ -154,8 +162,13 @@ public class MainGameLoop {
 		
 		long currentTime = DisplayManager.getCurrentTime();
 		float r=0,g=0,b =0;
+
 		while(!Display.isCloseRequested()){
 			camera.move();
+			renderer.renderShadowMap(entities, sun);
+			//renderer.renderShadowMap(entities, lights.get(1));			
+			//renderer.renderShadowMap(entities, lights.get(2));
+			//renderer.renderShadowMap(entities, lights.get(3));
 			sunBrightness = renderer.getSunBrightness();
 			lights.get(0).setColour(new Vector3f(sunBrightness,sunBrightness,sunBrightness));
 			if(DisplayManager.getCurrentTime()- currentTime > 300 ){

@@ -1,2 +1,12 @@
-/textures/
+/partilces/
+/particles/
+/engineTester/
+/terrains/
 /renderEngine/
+/entities/
+/shaders/
+/skybox/
+/toolbox/
+/shadows/
+/guis/
+/water/

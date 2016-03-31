@@ -27,6 +27,8 @@ public class TerrainShader extends ShaderProgram{
 	private int location_reflectivity;
 	private int location_skyColor;
 	private int location_plane;
+	private int location_toShadowMapSpace;
+	private int location_shadowMap;
 
 
 	public TerrainShader() {
@@ -49,6 +51,9 @@ public class TerrainShader extends ShaderProgram{
 		location_reflectivity = super.getUniformLocation("reflectivity");
 		location_skyColor = super.getUniformLocation("skyColour");
 		location_plane = super.getUniformLocation("plane");
+		location_toShadowMapSpace = super.getUniformLocation("toShadowMapSpace");
+		location_shadowMap = super.getUniformLocation("shadowMap");
+
 
 		
 		location_lightPosition = new int [MAX_LIGHTS];
@@ -61,6 +66,14 @@ public class TerrainShader extends ShaderProgram{
 			location_attenuation[i] = super.getUniformLocation("attenuation["+i+"]");
 
 		}
+	}
+	
+	public void connectTextureUnits (){
+		super.loadInt(location_shadowMap, 1);
+	}
+	
+	public void loadToShadowSpaceMarix(Matrix4f matrix){
+		super.loadMatrix(location_toShadowMapSpace, matrix);
 	}
 	
 	public void loadShineVariables(float damper,float reflectivity){
@@ -103,6 +116,7 @@ public class TerrainShader extends ShaderProgram{
 	public void loadProjectionMatrix(Matrix4f projection){
 		super.loadMatrix(location_projectionMatrix, projection);
 	}
+
 	
 
 }
