@@ -94,7 +94,8 @@ public class MainGameLoop {
 		
 		List<Light> lights = new ArrayList<Light>();
 		//Sun
-		lights.add(new Light(new Vector3f(100,4000,-7000),new Vector3f(0.1f,0.1f,0.1f)));
+		Light sun = new Light(new Vector3f(100,4000,-7000),new Vector3f(0.1f,0.1f,0.1f)); 
+		lights.add(sun);
 		//Point Lights
 		float x = -60;
 		float z = -30;
@@ -130,7 +131,7 @@ public class MainGameLoop {
 			
 		
 		Camera camera = new Camera();
-		MasterRenderer renderer = new MasterRenderer(loader);
+		MasterRenderer renderer = new MasterRenderer(loader, camera);
 		ParticleSystem system = new ParticleSystem(50, 25, 0.3f, 4, 1);
 		system.randomizeRotation();
 		system.setDirection(new Vector3f(0,1,0), 0.1f);
@@ -153,23 +154,12 @@ public class MainGameLoop {
 		waters.add(new WaterTile(-390,-120,WaterHeight));
 		
 
-		lights.add( new Light(new Vector3f(40, 14, -100), new Vector3f(2,0,0), new Vector3f(1, 0.01f, 0.002f)));
-		lights.add( new Light(new Vector3f(0, 14, -100), new Vector3f(0,2,2), new Vector3f(1, 0.01f, 0.002f)));
-		lights.add( new Light(new Vector3f(-40, 14, -100), new Vector3f(2,2,0), new Vector3f(1, 0.01f, 0.002f)));
-
-		entities.add(new Entity(lamp, new Vector3f(40, 0, -100), 0, 0, 0, 1.1f));
-		entities.add(new Entity(lamp, new Vector3f(0, 0, -100), 0, 0, 0, 1.1f));
-		entities.add(new Entity(lamp, new Vector3f(-40, 0, -100), 0, 0, 0,1.1f));
-		
-
-		
-		
 		while(!Display.isCloseRequested()){
 			camera.move();
-			system.generateParticles(camera.getPosition());
+			system.generateParticles(new Vector3f(x, y, z));
+			renderer.renderShadowMap(entities, sun);
 			sunBrightness = renderer.getSunBrightness();
 			lights.get(0).setColour(new Vector3f(sunBrightness,sunBrightness,sunBrightness));
-			
 			GL11.glEnable(GL30.GL_CLIP_DISTANCE0);
 			
 			//reflection buffer
