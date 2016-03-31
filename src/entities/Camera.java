@@ -1,6 +1,7 @@
 package entities;
 
 import java.nio.IntBuffer;
+
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.BufferUtils;
@@ -76,6 +77,7 @@ public class Camera {
 		if(cameraMouse){
 			yaw -= 0.1f*(Display.getWidth()/2-xpos);
 			pitch += 0.1f*(Display.getHeight()/2-ypos);
+			
 			Mouse.setCursorPosition(Display.getWidth()/2, Display.getHeight()/2);
 		}
 		

@@ -3,13 +3,17 @@ package engineTester;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
 import models.TexturedModel;
+
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
+
+import particles.ParticleSystem;
 import renderEngine.DisplayManager;
 import renderEngine.Loader;
 import renderEngine.MasterRenderer;
@@ -27,8 +31,10 @@ import entities.Light;
 public class MainGameLoop {
 
 	public static void main(String[] args) {
+		
 		DisplayManager.createDisplay();
 		Loader loader = new Loader();
+		
 		
 		TexturedModel tree = new TexturedModel(OBJLoader.loadObjModel("pine", loader),new ModelTexture(loader.loadTexture("pine")));
 		
@@ -65,7 +71,6 @@ public class MainGameLoop {
 			else{
 				y = terrain2.getHeightOfTerrain(x, Math.abs(z),-1);	
 			}
-			System.out.println(y);
 			entities.add(new Entity(tree, new Vector3f(x,y,z),0,random.nextFloat()*360,0,1));
 			x = random.nextFloat()*800 - 400;
 			z = random.nextFloat() * -600;
@@ -126,6 +131,13 @@ public class MainGameLoop {
 		
 		Camera camera = new Camera();
 		MasterRenderer renderer = new MasterRenderer(loader);
+		ParticleSystem system = new ParticleSystem(50, 25, 0.3f, 4, 1);
+		system.randomizeRotation();
+		system.setDirection(new Vector3f(0,1,0), 0.1f);
+		system.setLifeError(0.1f);
+		system.setSpeedError(0.4f);
+		system.setScaleError(0.8f);
+		
 		float sunBrightness = 1.5f;
 		WaterFrameBuffers fbos = new WaterFrameBuffers();
 		//Water
@@ -140,11 +152,21 @@ public class MainGameLoop {
 		waters.add(new WaterTile(-320,-120,WaterHeight));
 		waters.add(new WaterTile(-390,-120,WaterHeight));
 		
+
+		lights.add( new Light(new Vector3f(40, 14, -100), new Vector3f(2,0,0), new Vector3f(1, 0.01f, 0.002f)));
+		lights.add( new Light(new Vector3f(0, 14, -100), new Vector3f(0,2,2), new Vector3f(1, 0.01f, 0.002f)));
+		lights.add( new Light(new Vector3f(-40, 14, -100), new Vector3f(2,2,0), new Vector3f(1, 0.01f, 0.002f)));
+
+		entities.add(new Entity(lamp, new Vector3f(40, 0, -100), 0, 0, 0, 1.1f));
+		entities.add(new Entity(lamp, new Vector3f(0, 0, -100), 0, 0, 0, 1.1f));
+		entities.add(new Entity(lamp, new Vector3f(-40, 0, -100), 0, 0, 0,1.1f));
 		
+
 		
 		
 		while(!Display.isCloseRequested()){
 			camera.move();
+			system.generateParticles(camera.getPosition());
 			sunBrightness = renderer.getSunBrightness();
 			lights.get(0).setColour(new Vector3f(sunBrightness,sunBrightness,sunBrightness));
 			

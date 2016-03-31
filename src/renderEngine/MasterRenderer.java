@@ -164,6 +164,8 @@ public class MasterRenderer {
 	public float getSunBrightness(){
 		return sunBrightness;
 	}
+
+	
 	
 
 }
