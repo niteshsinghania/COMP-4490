@@ -92,7 +92,7 @@ public class MainGameLoop {
 		
 		List<Light> lights = new ArrayList<Light>();
 		//Sun
-		Light sun = new Light(new Vector3f(100,4000,-7000),new Vector3f(0.1f,0.1f,0.1f)); 
+		Light sun = new Light(new Vector3f(10000,15000,-10000),new Vector3f(0.1f,0.1f,0.1f)); 
 		lights.add(sun);
 		//Point Lights
 		float x = -60;
@@ -149,6 +149,9 @@ public class MainGameLoop {
 		while(!Display.isCloseRequested()){
 			camera.move();
 			renderer.renderShadowMap(entities, sun);
+			//renderer.renderShadowMap(entities, lights.get(1));			
+			//renderer.renderShadowMap(entities, lights.get(2));
+			//renderer.renderShadowMap(entities, lights.get(3));
 			sunBrightness = renderer.getSunBrightness();
 			lights.get(0).setColour(new Vector3f(sunBrightness,sunBrightness,sunBrightness));
 			GL11.glEnable(GL30.GL_CLIP_DISTANCE0);

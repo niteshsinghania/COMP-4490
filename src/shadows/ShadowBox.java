@@ -24,7 +24,7 @@ import renderEngine.MasterRenderer;
  */
 public class ShadowBox {
 
-	private static final float OFFSET = 10;
+	private static final float OFFSET = 15;
 	private static final Vector4f UP = new Vector4f(0, 1, 0, 0);
 	private static final Vector4f FORWARD = new Vector4f(0, 0, -1, 0);
 	private static final float SHADOW_DISTANCE = 100;
@@ -70,8 +70,8 @@ public class ShadowBox {
 		toFar.scale(SHADOW_DISTANCE);
 		Vector3f toNear = new Vector3f(forwardVector);
 		toNear.scale(MasterRenderer.NEAR_PLANE);
-		Vector3f centerNear = Vector3f.add(toNear, new Vector3f(0,5,0), null);
-		Vector3f centerFar = Vector3f.add(toFar, new Vector3f(0,5,0), null);
+		Vector3f centerNear = Vector3f.add(toNear, cam.getPosition(), null);
+		Vector3f centerFar = Vector3f.add(toFar, cam.getPosition(), null);
 
 		Vector4f[] points = calculateFrustumVertices(rotation, forwardVector, centerNear,
 				centerFar);
@@ -213,8 +213,8 @@ public class ShadowBox {
 	 */
 	private Matrix4f calculateCameraRotationMatrix() {
 		Matrix4f rotation = new Matrix4f();
-		rotation.rotate((float) Math.toRadians(30), new Vector3f(0, 1, 0));
-		rotation.rotate((float) Math.toRadians(-10), new Vector3f(1, 0, 0));
+		rotation.rotate((float) Math.toRadians(-cam.getYaw()), new Vector3f(0, 1, 0));
+		rotation.rotate((float) Math.toRadians(-cam.getPitch()), new Vector3f(1, 0, 0));
 		return rotation;
 	}
 

@@ -22,6 +22,8 @@ uniform mat4 toShadowMapSpace;
 
 const float density = 0.0035;
 const float gradient = 5.0;
+const float shadowDistance = 100.0;
+const float  transitionDistance = 10.0;
 
 uniform vec4 plane;
 
@@ -55,5 +57,8 @@ void main(void){
 	visibility = exp(-pow((distance*density),gradient));
 	visibility = clamp(visibility, 0.0, 1.0);
 	
+	distance = distance - (shadowDistance - transitionDistance);
+	distance = distance / transitionDistance;
+	shadowCoords.w = clamp(1.0-distance, 0.0, 1.0);
 	
 }

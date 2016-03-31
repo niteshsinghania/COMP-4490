@@ -28,7 +28,7 @@ public class TerrainShader extends ShaderProgram{
 	private int location_skyColor;
 	private int location_plane;
 	private int location_toShadowMapSpace;
-	private int location_ShadowMap;
+	private int location_shadowMap;
 
 
 	public TerrainShader() {
@@ -52,7 +52,7 @@ public class TerrainShader extends ShaderProgram{
 		location_skyColor = super.getUniformLocation("skyColour");
 		location_plane = super.getUniformLocation("plane");
 		location_toShadowMapSpace = super.getUniformLocation("toShadowMapSpace");
-		location_ShadowMap = super.getUniformLocation("toShadowMap");
+		location_shadowMap = super.getUniformLocation("shadowMap");
 
 
 		
@@ -69,7 +69,7 @@ public class TerrainShader extends ShaderProgram{
 	}
 	
 	public void connectTextureUnits (){
-		super.loadInt(location_ShadowMap, 0);
+		super.loadInt(location_shadowMap, 1);
 	}
 	
 	public void loadToShadowSpaceMarix(Matrix4f matrix){
