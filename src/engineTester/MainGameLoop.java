@@ -13,6 +13,8 @@ import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
 
+
+import particles.ParticleMaster;
 import particles.ParticleSystem;
 import renderEngine.DisplayManager;
 import renderEngine.Loader;
@@ -132,6 +134,7 @@ public class MainGameLoop {
 		
 		Camera camera = new Camera();
 		MasterRenderer renderer = new MasterRenderer(loader, camera);
+		ParticleMaster.init(loader, renderer.getProjectionMatrix());
 		ParticleSystem system = new ParticleSystem(50, 25, 0.3f, 4, 1);
 		system.randomizeRotation();
 		system.setDirection(new Vector3f(0,1,0), 0.1f);
@@ -156,7 +159,8 @@ public class MainGameLoop {
 
 		while(!Display.isCloseRequested()){
 			camera.move();
-			system.generateParticles(new Vector3f(x, y, z));
+			system.generateParticles(camera.getPosition());
+			ParticleMaster.update();
 			renderer.renderShadowMap(entities, sun);
 			sunBrightness = renderer.getSunBrightness();
 			lights.get(0).setColour(new Vector3f(sunBrightness,sunBrightness,sunBrightness));
@@ -178,11 +182,12 @@ public class MainGameLoop {
 			fbos.unbindCurrentFrameBuffer();
 			renderer.renderScene(entities, terrains, lights, camera,new Vector4f(0,-1,0,100000));
 			waterRenderer.render(waters, camera,lights.get(0));
+			ParticleMaster.renderParticles(camera);
 			DisplayManager.updateDisplay();
 			
 		}
 		
-
+		ParticleMaster.cleanUp();
 		renderer.cleanUp();
 		loader.cleanUp();
 		waterShader.cleanUp();
