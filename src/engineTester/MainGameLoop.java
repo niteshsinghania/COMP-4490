@@ -68,6 +68,21 @@ public class MainGameLoop {
 		
 		// Adding objects to scene
 
+
+		float sunBrightness = 1.5f;
+		WaterFrameBuffers fbos = new WaterFrameBuffers();
+		//Water
+		WaterShader waterShader = new WaterShader();
+		WaterRenderer waterRenderer = new WaterRenderer(loader,waterShader, renderer.getProjectionMatrix(),fbos);
+		List<WaterTile> waters = new ArrayList<WaterTile>();
+		//close body of water.
+		int WaterHeight = -5;
+		waters.add(new WaterTile(-99,-70,WaterHeight));// x; -90 -150   -90
+		waters.add(new WaterTile(-140,-180,WaterHeight));
+		//far left body of water
+		waters.add(new WaterTile(-320,-120,WaterHeight));
+		waters.add(new WaterTile(-390,-120,WaterHeight));
+		
 		
 		for(int i=0;i<500;i++){
 			float x = random.nextFloat()*800 - 400;
@@ -79,8 +94,11 @@ public class MainGameLoop {
 			else{
 				y = terrain2.getHeightOfTerrain(x, Math.abs(z),-1);	
 			}
-			entities.add(new Entity(tree, new Vector3f(x,y,z),0,random.nextFloat()*360,0,1));
-			x = random.nextFloat()*800 - 400;
+			for (int j = 0; j < waters.size(); j++) {
+				if (y > 0) {
+					entities.add(new Entity(tree, new Vector3f(x,y,z),0,random.nextFloat()*360,0,1));
+				}
+			}			x = random.nextFloat()*800 - 400;
 			z = random.nextFloat() * -600;
 			if(x< 0){
 				y= terrain.getHeightOfTerrain(Math.abs(x), Math.abs(z),1);
@@ -138,23 +156,6 @@ public class MainGameLoop {
 		}
 		lights.add( new Light(new Vector3f(x, y+14, z), new Vector3f(2,2,0), new Vector3f(1, 0.01f, 0.002f)));
 		entities.add(new Entity(lamp, new Vector3f(x, y, z), 0, 0, 0,1.1f));
-			
-		
-
-
-		float sunBrightness = 1.5f;
-		WaterFrameBuffers fbos = new WaterFrameBuffers();
-		//Water
-		WaterShader waterShader = new WaterShader();
-		WaterRenderer waterRenderer = new WaterRenderer(loader,waterShader, renderer.getProjectionMatrix(),fbos);
-		List<WaterTile> waters = new ArrayList<WaterTile>();
-		//close body of water.
-		int WaterHeight = -5;
-		waters.add(new WaterTile(-99,-70,WaterHeight));// x; -90 -150   -90
-		waters.add(new WaterTile(-140,-180,WaterHeight));
-		//far left body of water
-		waters.add(new WaterTile(-320,-120,WaterHeight));
-		waters.add(new WaterTile(-390,-120,WaterHeight));
 		
 		
 		
