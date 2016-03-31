@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import models.TexturedModel;
+import particles.Particle;
+import particles.ParticleMaster;
+import particles.ParticleSystem;
+
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
@@ -29,6 +34,9 @@ public class MainGameLoop {
 	public static void main(String[] args) {
 		DisplayManager.createDisplay();
 		Loader loader = new Loader();
+		
+		MasterRenderer renderer = new MasterRenderer(loader);
+		ParticleMaster.init(loader, renderer.getProjectionMatrix());
 		
 		TexturedModel tree = new TexturedModel(OBJLoader.loadObjModel("pine", loader),new ModelTexture(loader.loadTexture("pine")));
 		
@@ -89,7 +97,7 @@ public class MainGameLoop {
 		
 		List<Light> lights = new ArrayList<Light>();
 		//Sun
-		lights.add(new Light(new Vector3f(100,4000,-7000),new Vector3f(0.1f,0.1f,0.1f)));
+		lights.add(new Light(new Vector3f(10000,15000,-10000),new Vector3f(0.1f,0.1f,0.1f)));
 		//Point Lights
 		float x = -60;
 		float z = -30;
@@ -125,7 +133,7 @@ public class MainGameLoop {
 			
 		
 		Camera camera = new Camera();
-		MasterRenderer renderer = new MasterRenderer(loader);
+		
 		float sunBrightness = 1.5f;
 		WaterFrameBuffers fbos = new WaterFrameBuffers();
 		//Water
@@ -142,13 +150,34 @@ public class MainGameLoop {
 		
 		
 		
+		ParticleSystem partilceSystem = new ParticleSystem(4000,30,0.4f,3,0.5f);
 		
+		long currentTime = DisplayManager.getCurrentTime();
+		float r=0,g=0,b =0;
 		while(!Display.isCloseRequested()){
 			camera.move();
 			sunBrightness = renderer.getSunBrightness();
 			lights.get(0).setColour(new Vector3f(sunBrightness,sunBrightness,sunBrightness));
+			if(DisplayManager.getCurrentTime()- currentTime > 300 ){
+				camera.setFireWorks(false);
+			}
 			
-			GL11.glEnable(GL30.GL_CLIP_DISTANCE0);
+			if(camera.getFireWorks()){
+				r = random.nextFloat();
+				g = random.nextFloat();
+				b = random.nextFloat();
+				float xOffSet = random.nextFloat()*800 -400;
+				float yOffSet = random.nextFloat() * 20;
+				Vector3f fireWorkExplosion =new Vector3f(-xOffSet, 80+yOffSet,-260) ;
+				partilceSystem.generateParticles(fireWorkExplosion);
+			}
+			else{
+				currentTime = DisplayManager.getCurrentTime();
+			}
+
+			
+			ParticleMaster.update();
+			GL11.glEnable(GL30.GL_CLIP_DISTANCE0);						
 			
 			//reflection buffer
 			fbos.bindReflectionFrameBuffer();
@@ -156,9 +185,11 @@ public class MainGameLoop {
 			camera.getPosition().y -=distance;
 			camera.invertPitch();
 			renderer.renderScene(entities, terrains, lights, camera,new Vector4f(0,1,0,-WaterHeight+1f));
+
+			ParticleMaster.renderParticles(camera, (new Vector4f(r,g,b,1f)));
 			camera.getPosition().y +=distance;
 			camera.invertPitch();
-			//Retraction buffer
+			//Refraction buffer
 			fbos.bindRefractionFrameBuffer();
 			renderer.renderScene(entities, terrains, lights, camera,new Vector4f(0,-1,0,-WaterHeight+1f));		
 			//screen
@@ -166,11 +197,12 @@ public class MainGameLoop {
 			fbos.unbindCurrentFrameBuffer();
 			renderer.renderScene(entities, terrains, lights, camera,new Vector4f(0,-1,0,100000));
 			waterRenderer.render(waters, camera,lights.get(0));
+			ParticleMaster.renderParticles(camera, (new Vector4f(r,g,b,1f)));
 			DisplayManager.updateDisplay();
 			
 		}
 		
-
+		ParticleMaster.cleanUp();
 		renderer.cleanUp();
 		loader.cleanUp();
 		waterShader.cleanUp();

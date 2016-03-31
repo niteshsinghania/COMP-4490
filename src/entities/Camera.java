@@ -20,6 +20,7 @@ public class Camera {
 	double xpos, ypos;
 	Cursor emptyCursor;
 	private boolean night = false;
+	private boolean fireWorks = true;
 	
 	public Camera(){
 		cameraMouse = false;
@@ -39,15 +40,18 @@ public class Camera {
 	}
 	
 	public void move(){
-		
+		yaw = yaw%360;
 		if(Keyboard.isKeyDown(Keyboard.KEY_W)){
-			position.z-=0.2f;
+			position.z-=Math.cos(Math.toRadians(-yaw))*0.2;
+			position.x-=Math.sin(Math.toRadians(-yaw))*0.2;
 		}
 		if(Keyboard.isKeyDown(Keyboard.KEY_D)){
-			position.x+=0.2f;
+			position.z+=Math.sin(Math.toRadians(yaw))*0.2;
+			position.x+=Math.cos(Math.toRadians(yaw))*0.2;
 		}
 		if(Keyboard.isKeyDown(Keyboard.KEY_A)){
-			position.x-=0.2f;
+			position.z-=Math.sin(Math.toRadians(yaw))*0.2;
+			position.x-=Math.cos(Math.toRadians(yaw))*0.2;
 		}
 		if(Keyboard.isKeyDown(Keyboard.KEY_SPACE)){
 			position.y+=0.2f;
@@ -56,7 +60,8 @@ public class Camera {
 			position.y-=0.2f;
 		}
 		if(Keyboard.isKeyDown(Keyboard.KEY_S) && position.z <= 0.0f){
-			position.z+=0.2f;
+			position.z+=Math.cos(Math.toRadians(-yaw))*0.2;
+			position.x+=Math.sin(Math.toRadians(-yaw))*0.2;
 		}
 		while (Keyboard.next()) {
 			if(Keyboard.getEventKey() == (Keyboard.KEY_ESCAPE)){
@@ -70,6 +75,11 @@ public class Camera {
 					night = ! night;
 				}
 			}
+			else if(Keyboard.getEventKey() == (Keyboard.KEY_R)){
+				if (!Keyboard.getEventKeyState()) {
+					fireWorks = ! fireWorks;
+				}
+			}
 		}
 		xpos = Mouse.getX();
 		ypos = Mouse.getY();
@@ -77,6 +87,7 @@ public class Camera {
 			yaw -= 0.1f*(Display.getWidth()/2-xpos);
 			pitch += 0.1f*(Display.getHeight()/2-ypos);
 			Mouse.setCursorPosition(Display.getWidth()/2, Display.getHeight()/2);
+			System.out.println("yaw " + yaw);
 		}
 		
 		
@@ -102,6 +113,13 @@ public class Camera {
 	}
 	public boolean getNight() {
 		return night;
+	}
+	
+	public boolean getFireWorks() {
+		return fireWorks;
+	}
+	public void setFireWorks(boolean f) {
+		fireWorks = f;
 	}
 	
 
