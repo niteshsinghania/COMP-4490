@@ -89,7 +89,6 @@ public class Camera {
 			pitch += 0.1f*(Display.getHeight()/2-ypos);
 			
 			Mouse.setCursorPosition(Display.getWidth()/2, Display.getHeight()/2);
-			System.out.println("yaw " + yaw);
 		}
 		
 		
