@@ -163,13 +163,10 @@ public class MainGameLoop {
 		
 		long currentTime = DisplayManager.getCurrentTime();
 		float r=0,g=0,b =0;
-		renderer.renderShadowMap(entities, sun);
-		//renderer.renderShadowMap(entities, lights.get(1));			
-		//renderer.renderShadowMap(entities, lights.get(2));
-		//renderer.renderShadowMap(entities, lights.get(3));
+
 		while(!Display.isCloseRequested()){
 			camera.move();
-
+			renderer.renderShadowMap(entities, sun);
 			sunBrightness = renderer.getSunBrightness();
 			lights.get(0).setColour(new Vector3f(sunBrightness,sunBrightness,sunBrightness));
 			if(DisplayManager.getCurrentTime()- currentTime > 300 ){
